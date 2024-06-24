@@ -1,0 +1,22 @@
+name: Build Docker Container
+
+on:
+    workflow_dispatch:
+
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag pazf/python-flask:latest
+    -
+      name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+         push: true
+         tags: pazf/python-flask:latest
