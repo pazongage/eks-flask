@@ -72,7 +72,7 @@ resource "null_resource" "update-flask-image" {
 
 resource "null_resource" "replace_trigger" {
   triggers = {
-    replace = false
+    replace = true
   }
 }
 
