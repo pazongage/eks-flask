@@ -39,17 +39,6 @@ module "eks" {
     }
 
   }
-#    node_security_group_additional_rules = {
-#     custom = {
-#       description              = "Allow ingress to EKS nodes"
-#       protocol                 = "tcp"
-#       from_port                = 5000
-#       to_port                  = 5000
-#       type                     = "ingress"
-#       cidr_blocks              = ["0.0.0.0/0"]
-#     }
-
-# }
 }
 
 
@@ -69,11 +58,21 @@ resource "null_resource" "deploy-yaml" {
    }
 }
 
+resource "null_resource" "update-flask-image" {
+  depends_on = [null_resource.deploy-yaml]
+
+  provisioner "local-exec" {
+      command = "kubectl rollout restart deployment flask"
+  }
+   lifecycle {
+        replace_triggered_by = [null_resource.replace_trigger]
+   }
+}
 
 
 resource "null_resource" "replace_trigger" {
   triggers = {
-    replace = true
+    replace = false
   }
 }
 
