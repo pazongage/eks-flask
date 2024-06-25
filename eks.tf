@@ -61,9 +61,19 @@ resource "null_resource" "deploy-yaml" {
   provisioner "local-exec" {
       command = "aws eks update-kubeconfig --name eks-cluster"
   }
-
   provisioner "local-exec" {
       command = "kubectl apply -f flask.yaml"
+  }
+   lifecycle {
+        replace_triggered_by = [null_resource.replace_trigger]
+   }
+}
+
+
+
+resource "null_resource" "replace_trigger" {
+  triggers = {
+    replace = true
   }
 }
 
